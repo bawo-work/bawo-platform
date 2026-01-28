@@ -1,20 +1,26 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development', // Disable in dev
+});
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
-  },
-  // PWA configuration will be added in Sprint 6
+  // Image optimization
   images: {
-    formats: ['image/webp', 'image/avif'],
+    formats: ['image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200],
   },
-  // Performance optimizations for MiniPay
+  // Compiler optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = withBundleAnalyzer(withPWA(nextConfig));

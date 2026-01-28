@@ -1,207 +1,83 @@
-// Worker Dashboard Page
+/**
+ * Worker Dashboard - Main hub with tasks, earnings, and gamification
+ */
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useWallet } from '@/hooks/useWallet';
-import { getWorkerByWallet, getWorkerStats } from '@/lib/api/workers';
-import { WorkerProfileHeader, WorkerStatsGrid } from '@/components/worker/WorkerProfile';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import type { Worker, WorkerStats } from '@/lib/api/types';
+import { PointsBalance } from '@/components/workers/PointsBalance';
+import { ReferralCard } from '@/components/workers/ReferralCard';
+import { StreakCard } from '@/components/workers/StreakCard';
+import { Leaderboard } from '@/components/workers/Leaderboard';
+import { OfflineSync } from '@/components/offline/OfflineSync';
 
-/**
- * Navigation tabs for worker dashboard
- */
-function DashboardTabs({ active }: { active: 'tasks' | 'earnings' | 'profile' }) {
-  return (
-    <div className="flex border-b border-sand bg-cream">
-      <button
-        className={`flex-1 px-4 py-3 text-sm font-medium transition-colors min-h-[48px] ${
-          active === 'tasks'
-            ? 'text-teal-700 border-b-2 border-teal-700'
-            : 'text-warm-gray-600 hover:text-warm-gray-800'
-        }`}
-      >
-        Tasks
-      </button>
-      <button
-        className={`flex-1 px-4 py-3 text-sm font-medium transition-colors min-h-[48px] ${
-          active === 'earnings'
-            ? 'text-teal-700 border-b-2 border-teal-700'
-            : 'text-warm-gray-600 hover:text-warm-gray-800'
-        }`}
-      >
-        Earnings
-      </button>
-      <button
-        className={`flex-1 px-4 py-3 text-sm font-medium transition-colors min-h-[48px] ${
-          active === 'profile'
-            ? 'text-teal-700 border-b-2 border-teal-700'
-            : 'text-warm-gray-600 hover:text-warm-gray-800'
-        }`}
-      >
-        Profile
-      </button>
-    </div>
-  );
-}
-
-/**
- * Worker Dashboard Page
- */
 export default function DashboardPage() {
-  const router = useRouter();
-  const { address, isConnected, isLoading: walletLoading } = useWallet();
-  const [worker, setWorker] = useState<Worker | null>(null);
-  const [stats, setStats] = useState<WorkerStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // TODO: Get worker ID from auth context
+  const workerId = 'mock-worker-id';
 
-  /**
-   * Load worker profile and stats
-   */
-  useEffect(() => {
-    async function loadWorkerData() {
-      if (!address) return;
+  return (
+    <div className="min-h-screen bg-warm-white p-4">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-teal-700 mb-6">Dashboard</h1>
 
-      try {
-        setIsLoading(true);
-        setError(null);
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Earnings & Tasks */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-teal-700 mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href="/tasks"
+                  className="p-4 bg-teal-700 text-white rounded-lg text-center font-semibold hover:bg-teal-800 transition"
+                  style={{ minHeight: '48px' }}
+                >
+                  Browse Tasks
+                </a>
+                <a
+                  href="/earnings"
+                  className="p-4 bg-gold text-white rounded-lg text-center font-semibold hover:bg-amber-600 transition"
+                  style={{ minHeight: '48px' }}
+                >
+                  View Earnings
+                </a>
+              </div>
+            </div>
 
-        // Get worker profile
-        const workerResult = await getWorkerByWallet(address);
+            {/* Gamification Features */}
+            <StreakCard />
+            <ReferralCard workerId={workerId} />
+            <Leaderboard />
+          </div>
 
-        if (!workerResult.success) {
-          setError(workerResult.error || 'Failed to load profile');
-          return;
-        }
+          {/* Right Column - Points & Stats */}
+          <div className="space-y-6">
+            <PointsBalance />
 
-        if (!workerResult.data) {
-          // Worker profile doesn't exist - redirect to onboarding
-          router.push('/onboard');
-          return;
-        }
-
-        setWorker(workerResult.data);
-
-        // Get worker stats
-        const statsResult = await getWorkerStats(workerResult.data.id);
-        if (statsResult.success && statsResult.data) {
-          setStats(statsResult.data);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    if (isConnected && address && !walletLoading) {
-      loadWorkerData();
-    }
-  }, [address, isConnected, walletLoading, router]);
-
-  /**
-   * Redirect to onboarding if not connected
-   */
-  useEffect(() => {
-    if (!walletLoading && !isConnected) {
-      router.push('/onboard');
-    }
-  }, [isConnected, walletLoading, router]);
-
-  // Loading state
-  if (walletLoading || isLoading) {
-    return (
-      <div className="min-h-screen bg-warm-white flex items-center justify-center p-4">
-        <Card className="p-6 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-700 mx-auto mb-3" />
-          <p className="text-warm-gray-800">Loading dashboard...</p>
-        </Card>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="min-h-screen bg-warm-white flex items-center justify-center p-4">
-        <Card className="p-6 text-center border-2 border-error">
-          <svg
-            className="w-12 h-12 text-error mx-auto mb-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-          <h3 className="text-lg font-semibold text-warm-gray-800 mb-2">
-            Error Loading Dashboard
-          </h3>
-          <p className="text-warm-gray-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
-        </Card>
-      </div>
-    );
-  }
-
-  // Main dashboard
-  if (worker) {
-    return (
-      <div className="min-h-screen bg-warm-white">
-        {/* Header */}
-        <div className="bg-cream border-b border-sand">
-          <div className="max-w-7xl mx-auto p-4">
-            <WorkerProfileHeader worker={worker} />
+            {/* Today's Stats */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-teal-700 mb-4">Today's Progress</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Tasks Completed</span>
+                  <span className="text-sm font-semibold text-teal-700">12</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Accuracy Rate</span>
+                  <span className="text-sm font-semibold text-green-600">95%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Points Earned</span>
+                  <span className="text-sm font-semibold text-gold">62 pts</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Navigation Tabs */}
-        <DashboardTabs active="tasks" />
-
-        {/* Content */}
-        <div className="max-w-7xl mx-auto p-4 space-y-6">
-          {/* Stats Grid */}
-          {stats && <WorkerStatsGrid stats={stats} />}
-
-          {/* Tasks Section (placeholder) */}
-          <Card className="p-6 text-center">
-            <svg
-              className="w-16 h-16 text-warm-gray-600 mx-auto mb-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </svg>
-            <h3 className="text-lg font-semibold text-warm-gray-800 mb-2">
-              No tasks available right now
-            </h3>
-            <p className="text-warm-gray-600 mb-4">
-              Check back soon for new tasks!
-            </p>
-            <p className="text-sm text-warm-gray-600">
-              Task system coming in Sprint 3
-            </p>
-          </Card>
-        </div>
       </div>
-    );
-  }
 
-  return null;
+      {/* Offline Sync Notification */}
+      <OfflineSync />
+    </div>
+  );
 }
