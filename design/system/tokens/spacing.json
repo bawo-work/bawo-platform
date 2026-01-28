@@ -1,0 +1,117 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "spacing": {
+    "$description": "Bawo spacing system - 4px base unit, generous for mobile",
+
+    "scale": {
+      "0": {
+        "$value": "0",
+        "$description": "No spacing"
+      },
+      "px": {
+        "$value": "1px",
+        "$description": "Hairline borders"
+      },
+      "0.5": {
+        "$value": "0.125rem",
+        "$description": "2px - Micro spacing"
+      },
+      "1": {
+        "$value": "0.25rem",
+        "$description": "4px - Base unit"
+      },
+      "2": {
+        "$value": "0.5rem",
+        "$description": "8px - Tight spacing"
+      },
+      "3": {
+        "$value": "0.75rem",
+        "$description": "12px - Compact spacing"
+      },
+      "4": {
+        "$value": "1rem",
+        "$description": "16px - Standard spacing"
+      },
+      "5": {
+        "$value": "1.25rem",
+        "$description": "20px - Comfortable spacing"
+      },
+      "6": {
+        "$value": "1.5rem",
+        "$description": "24px - Generous spacing"
+      },
+      "8": {
+        "$value": "2rem",
+        "$description": "32px - Section spacing"
+      },
+      "10": {
+        "$value": "2.5rem",
+        "$description": "40px - Large gaps"
+      },
+      "12": {
+        "$value": "3rem",
+        "$description": "48px - Major sections"
+      },
+      "16": {
+        "$value": "4rem",
+        "$description": "64px - Page sections"
+      },
+      "20": {
+        "$value": "5rem",
+        "$description": "80px - Hero spacing"
+      },
+      "24": {
+        "$value": "6rem",
+        "$description": "96px - Extra large"
+      }
+    },
+
+    "component": {
+      "$description": "Semantic spacing for common patterns",
+      "buttonPaddingX": {
+        "$value": "1rem",
+        "$description": "16px horizontal button padding"
+      },
+      "buttonPaddingY": {
+        "$value": "0.75rem",
+        "$description": "12px vertical button padding"
+      },
+      "inputPaddingX": {
+        "$value": "0.75rem",
+        "$description": "12px horizontal input padding"
+      },
+      "inputPaddingY": {
+        "$value": "0.625rem",
+        "$description": "10px vertical input padding"
+      },
+      "cardPadding": {
+        "$value": "1rem",
+        "$description": "16px card padding (mobile)"
+      },
+      "cardPaddingLg": {
+        "$value": "1.5rem",
+        "$description": "24px card padding (desktop)"
+      },
+      "stackGap": {
+        "$value": "1rem",
+        "$description": "16px gap between stacked items"
+      },
+      "sectionGap": {
+        "$value": "2rem",
+        "$description": "32px gap between sections"
+      }
+    },
+
+    "touch": {
+      "$description": "Touch target sizes for mobile accessibility",
+      "minimum": {
+        "$value": "2.75rem",
+        "$description": "44px - Apple minimum"
+      },
+      "recommended": {
+        "$value": "3rem",
+        "$description": "48px - Bawo standard (larger for thick fingers)"
+      }
+    }
+  }
+}

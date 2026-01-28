@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design System Typography",
+  "type": "object",
+  "required": ["fontFamily", "scale"],
+  "properties": {
+    "fontFamily": {
+      "type": "object",
+      "required": ["primary", "mono"],
+      "properties": {
+        "primary": { "$ref": "#/definitions/stringToken" },
+        "secondary": { "$ref": "#/definitions/stringToken" },
+        "mono": { "$ref": "#/definitions/stringToken" }
+      }
+    },
+    "scale": {
+      "type": "object",
+      "description": "Type scale with sizes",
+      "patternProperties": {
+        "^(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl)$": {
+          "$ref": "#/definitions/typographyScaleToken"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "stringToken": {
+      "type": "object",
+      "required": ["value", "description"],
+      "properties": {
+        "value": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "typographyScaleToken": {
+      "type": "object",
+      "required": ["value", "lineHeight", "description"],
+      "properties": {
+        "value": { "type": "string" },
+        "lineHeight": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

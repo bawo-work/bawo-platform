@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design System Spacing",
+  "type": "object",
+  "required": ["base", "scale"],
+  "properties": {
+    "base": {
+      "type": "integer",
+      "description": "Base spacing unit in pixels",
+      "minimum": 1
+    },
+    "scale": {
+      "type": "object",
+      "description": "Spacing scale",
+      "patternProperties": {
+        "^(0|px|0\.5|1|2|3|4|5|6|8|10|12|16|20|24|32|40|48|64)$": {
+          "type": "object",
+          "required": ["value", "description"],
+          "properties": {
+            "value": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

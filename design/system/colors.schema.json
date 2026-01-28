@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design System Colors",
+  "type": "object",
+  "required": ["primitive", "semantic"],
+  "properties": {
+    "primitive": {
+      "type": "object",
+      "description": "Base color palette",
+      "patternProperties": {
+        "^[a-z]+$": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "$ref": "#/definitions/colorToken"
+            }
+          }
+        }
+      }
+    },
+    "semantic": {
+      "type": "object",
+      "description": "Semantic color roles",
+      "properties": {
+        "brand": { "$ref": "#/definitions/stringToken" },
+        "text": {
+          "type": "object",
+          "required": ["primary", "secondary"],
+          "properties": {
+            "primary": { "$ref": "#/definitions/colorToken" },
+            "secondary": { "$ref": "#/definitions/colorToken" },
+            "tertiary": { "$ref": "#/definitions/colorToken" },
+            "inverse": { "$ref": "#/definitions/colorToken" }
+          }
+        },
+        "surface": {
+          "type": "object",
+          "required": ["background", "foreground"],
+          "properties": {
+            "background": { "$ref": "#/definitions/colorToken" },
+            "foreground": { "$ref": "#/definitions/colorToken" },
+            "overlay": { "$ref": "#/definitions/colorToken" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "colorToken": {
+      "type": "object",
+      "required": ["value", "description"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+        },
+        "description": { "type": "string" }
+      }
+    },
+    "stringToken": {
+      "type": "object",
+      "required": ["value", "description"],
+      "properties": {
+        "value": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

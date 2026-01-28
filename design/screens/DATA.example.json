@@ -1,0 +1,46 @@
+{
+  "$schema": "../../../templates/design/data.schema.json",
+  "feature": "example",
+  "dataSets": {
+    "typical": {
+      "description": "Typical user with normal amount of data",
+      "data": {
+        "items": [
+          {
+            "id": "1",
+            "name": "Sample Item",
+            "description": "A realistic description",
+            "createdAt": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    "empty": {
+      "description": "New user with no data",
+      "data": {
+        "items": []
+      }
+    },
+    "maximum": {
+      "description": "Power user at system limits",
+      "data": {
+        "items": [
+          "comment": "100+ items with realistic variation"
+        ]
+      }
+    },
+    "edge": {
+      "description": "Edge cases - long names, special characters, etc.",
+      "data": {
+        "items": [
+          {
+            "id": "1",
+            "name": "This is an extremely long name that might cause layout issues if not handled properly",
+            "description": "Unicode: special characters example",
+            "createdAt": "2099-12-31T23:59:59Z"
+          }
+        ]
+      }
+    }
+  }
+}

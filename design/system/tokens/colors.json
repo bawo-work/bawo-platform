@@ -1,0 +1,154 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "color": {
+    "$description": "Bawo color system - Warm modern African aesthetic",
+
+    "neutral": {
+      "$description": "Warm neutral base palette",
+      "warmWhite": {
+        "$value": "#FEFDFB",
+        "$description": "Primary background (worker app)"
+      },
+      "cream": {
+        "$value": "#FAF7F2",
+        "$description": "Surface/cards"
+      },
+      "sand": {
+        "$value": "#F0EBE3",
+        "$description": "Subtle dividers, disabled states"
+      },
+      "warmGray400": {
+        "$value": "#A39E94",
+        "$description": "Placeholder text, icons (3.1:1 contrast)"
+      },
+      "warmGray600": {
+        "$value": "#6B665C",
+        "$description": "Secondary text (5.2:1 contrast)"
+      },
+      "warmGray800": {
+        "$value": "#3D3935",
+        "$description": "Primary text (10.5:1 contrast)"
+      },
+      "warmBlack": {
+        "$value": "#2C2925",
+        "$description": "Headlines, emphasis (12.3:1 contrast)"
+      },
+      "white": {
+        "$value": "#FFFFFF",
+        "$description": "Client dashboard background"
+      }
+    },
+
+    "primary": {
+      "$description": "Deep Teal - Safaricom confidence",
+      "50": {
+        "$value": "#E8F5F4",
+        "$description": "Subtle backgrounds"
+      },
+      "100": {
+        "$value": "#C7E6E4",
+        "$description": "Hover states, highlights"
+      },
+      "300": {
+        "$value": "#5DACA6",
+        "$description": "Borders, secondary buttons (2.9:1)"
+      },
+      "500": {
+        "$value": "#2D8A83",
+        "$description": "Links, active states (4.5:1)"
+      },
+      "600": {
+        "$value": "#1A7068",
+        "$description": "Primary buttons (5.8:1)"
+      },
+      "700": {
+        "$value": "#1A5F5A",
+        "$description": "Primary brand color, headers (6.8:1)"
+      },
+      "800": {
+        "$value": "#164D49",
+        "$description": "Pressed states, dark UI (8.4:1)"
+      },
+      "900": {
+        "$value": "#0F3633",
+        "$description": "Near-black applications (11.2:1)"
+      }
+    },
+
+    "secondary": {
+      "$description": "Terracotta - earthy warmth, used sparingly",
+      "50": {
+        "$value": "#FDF3EF",
+        "$description": "Subtle warm backgrounds"
+      },
+      "100": {
+        "$value": "#F9DED4",
+        "$description": "Warm highlights"
+      },
+      "300": {
+        "$value": "#E49A7C",
+        "$description": "Icons, accents (2.4:1)"
+      },
+      "500": {
+        "$value": "#C45D3A",
+        "$description": "Secondary actions, emphasis (4.5:1)"
+      },
+      "600": {
+        "$value": "#A84E31",
+        "$description": "Hover on secondary (5.5:1)"
+      },
+      "700": {
+        "$value": "#8B3F26",
+        "$description": "Pressed states (7.2:1)"
+      }
+    },
+
+    "semantic": {
+      "$description": "Semantic colors with warm undertones",
+      "success": {
+        "$value": "#2D8A3D",
+        "$description": "Payments confirmed, task complete"
+      },
+      "successLight": {
+        "$value": "#E6F5E8",
+        "$description": "Success backgrounds"
+      },
+      "warning": {
+        "$value": "#C4883A",
+        "$description": "Cautions, time warnings"
+      },
+      "warningLight": {
+        "$value": "#FDF5E6",
+        "$description": "Warning backgrounds"
+      },
+      "error": {
+        "$value": "#C43A3A",
+        "$description": "Failures, validation errors"
+      },
+      "errorLight": {
+        "$value": "#FDE8E8",
+        "$description": "Error backgrounds"
+      },
+      "info": {
+        "$value": "#2D6B8A",
+        "$description": "Informational, neutral"
+      },
+      "infoLight": {
+        "$value": "#E6F0F5",
+        "$description": "Info backgrounds"
+      }
+    },
+
+    "money": {
+      "$description": "Gold for earnings and payments",
+      "gold": {
+        "$value": "#C4A23A",
+        "$description": "Earnings display, payment confirmations"
+      },
+      "goldLight": {
+        "$value": "#FDF8E6",
+        "$description": "Earnings backgrounds"
+      }
+    }
+  }
+}

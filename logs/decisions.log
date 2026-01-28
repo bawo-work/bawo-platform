@@ -1,0 +1,63 @@
+## 2026-01-28 15:30 — Critical Technical Questions Resolved
+
+**Decision:** Resolved all 7 critical open questions from SDD Section 10 before starting implementation.
+
+**Questions & Resolutions:**
+
+1. **Self Protocol NFC on Tecno/Infinix devices**
+   - Resolution: Self as default path, phone verification as opt-down
+   - Self users: Full access, all tasks, $50/day limit
+   - Phone users: Limited access, basic tasks, $10/day limit
+   - Workers can upgrade from phone to Self anytime
+   - Week 1 action: Test on 3 device models to optimize (not block)
+
+2. **Celo gas fees during congestion**
+   - Resolution: Not a concern, skip
+   - Rationale: Celo fees consistently sub-cent, MiniPay processes millions of transactions
+   - No action needed
+
+3. **Self Protocol pricing**
+   - Resolution: Get quote but not blocking launch
+   - Rationale: Phone opt-down means pricing doesn't block MVP
+   - Week 1 action: Email Self Protocol for quote (for unit economics)
+
+4. **MiniPay PWA deep linking**
+   - Resolution: Web-first, PWA as enhancement
+   - Rationale: Web view functional, PWA install is nice-to-have
+   - Sprint 1: Build web-first
+
+5. **Supabase Realtime pricing at scale**
+   - Resolution: Hybrid design (Realtime for active tasks, polling for dashboard)
+   - Rationale: Measure in production, not a launch blocker
+   - Sprint 2: Implement hybrid approach
+
+6. **Kenya ODPC registration**
+   - Resolution: File Week 1, operate during processing
+   - Rationale: Standard practice, processing takes 30-90 days
+   - Week 1 action: File registration
+
+7. **Yellow Card backup integration**
+   - Resolution: Defer to Month 3+
+   - Rationale: MiniPay unlikely to restrict, low priority
+   - No immediate action
+
+**Impact:**
+- No technical blockers to implementation
+- Sprint 1 can proceed immediately
+- Week 1 validation tasks added but run in parallel (non-blocking)
+- Two-tiered verification approach (Self + phone) de-risks primary assumption
+
+**Rationale:**
+The Self-as-default with phone-opt-down strategy means we can launch regardless of:
+- Self Protocol device compatibility results
+- Self Protocol pricing quote
+- Any single integration point failing
+
+This significantly reduces technical risk for MVP launch.
+
+**Next Steps:**
+- Proceed with `/implement` to start Sprint 1
+- Complete Week 1 validation tasks in parallel
+- Document validation results in `docs/validation/`
+
+---
