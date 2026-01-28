@@ -1,84 +1,61 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { signUpClient } from '@/lib/auth/client'
 
-/**
- * Client Authentication - Sign Up (Skeleton)
- *
- * Sprint 1: Returns mock response
- * Sprint 5: Will integrate actual Supabase Auth
- *
- * Reference: SDD Section 1.4 - Client Authentication
- */
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, password, companyName } = await request.json()
+    const body = await req.json()
+    const { email, password, companyName } = body
 
-    // Validation
-    if (!email || !password) {
+    // Validate required fields
+    if (!email || !password || !companyName) {
       return NextResponse.json(
-        {
-          error: {
-            code: 'MISSING_FIELDS',
-            message: 'Email and password are required'
-          }
-        },
+        { error: 'Email, password, and company name are required' },
         { status: 400 }
       )
     }
 
-    // Email format validation
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        {
-          error: {
-            code: 'INVALID_EMAIL',
-            message: 'Invalid email format'
-          }
-        },
+        { error: 'Invalid email format' },
         { status: 400 }
       )
     }
 
-    // Password strength validation
-    if (password.length < 12) {
+    // Validate password length
+    if (password.length < 8) {
       return NextResponse.json(
-        {
-          error: {
-            code: 'WEAK_PASSWORD',
-            message: 'Password must be at least 12 characters'
-          }
-        },
+        { error: 'Password must be at least 8 characters' },
         { status: 400 }
       )
     }
 
-    // TODO Sprint 5: Implement actual Supabase Auth
-    // const { data, error } = await supabase.auth.signUp({ email, password })
-    // await supabase.from('clients').insert({ id: data.user.id, email, company_name: companyName })
-
-    // Mock response for Sprint 1
-    const mockToken = `mock_client_jwt_${email.split('@')[0]}`
-    const mockClientId = `client_${email.split('@')[0]}`
+    const result = await signUpClient({ email, password, companyName })
 
     return NextResponse.json({
-      data: {
-        token: mockToken,
-        userId: mockClientId,
-        email,
-        companyName: companyName || null,
-        message: 'Account created successfully (mock response for Sprint 1)'
-      }
-    }, { status: 201 })
-
-  } catch (error) {
-    console.error('Client signup error:', error)
-    return NextResponse.json(
-      {
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to create account'
-        }
+      success: true,
+      user: {
+        id: result.user.id,
+        email: result.user.email,
       },
+      clientId: result.clientId,
+    })
+  } catch (error) {
+    console.error('Signup error:', error)
+
+    const message = error instanceof Error ? error.message : 'Signup failed'
+
+    // Handle duplicate email
+    if (message.includes('duplicate') || message.includes('already exists')) {
+      return NextResponse.json(
+        { error: 'An account with this email already exists' },
+        { status: 409 }
+      )
+    }
+
+    return NextResponse.json(
+      { error: message },
       { status: 500 }
     )
   }

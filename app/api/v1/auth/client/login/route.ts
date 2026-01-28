@@ -1,82 +1,55 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { signInClient } from '@/lib/auth/client'
 
-/**
- * Client Authentication - Email/Password Login (Skeleton)
- *
- * Sprint 1: Returns mock response
- * Sprint 5: Will integrate actual Supabase Auth
- *
- * Reference: SDD Section 1.4 - Client Authentication
- */
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await request.json()
+    const body = await req.json()
+    const { email, password } = body
 
-    // Validation
+    // Validate required fields
     if (!email || !password) {
       return NextResponse.json(
-        {
-          error: {
-            code: 'MISSING_FIELDS',
-            message: 'Email and password are required'
-          }
-        },
+        { error: 'Email and password are required' },
         { status: 400 }
       )
     }
 
-    // Basic email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        {
-          error: {
-            code: 'INVALID_EMAIL',
-            message: 'Invalid email format'
-          }
-        },
-        { status: 400 }
-      )
-    }
+    const result = await signInClient(email, password)
 
-    // TODO Sprint 5: Implement actual Supabase Auth
-    // const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: result.user.id,
+        email: result.user.email,
+      },
+      session: {
+        accessToken: result.session.access_token,
+        expiresAt: result.session.expires_at,
+      },
+    })
+  } catch (error) {
+    console.error('Login error:', error)
 
-    // Mock response for Sprint 1
-    // In production, would check against actual database
-    if (password.length < 8) {
+    const message = error instanceof Error ? error.message : 'Login failed'
+
+    // Handle invalid credentials
+    if (message.includes('Invalid') || message.includes('credentials')) {
       return NextResponse.json(
-        {
-          error: {
-            code: 'INVALID_CREDENTIALS',
-            message: 'Invalid email or password'
-          }
-        },
+        { error: 'Invalid email or password' },
         { status: 401 }
       )
     }
 
-    const mockToken = `mock_client_jwt_${email.split('@')[0]}`
-    const mockClientId = `client_${email.split('@')[0]}`
+    // Handle non-client accounts
+    if (message.includes('Not a valid client account')) {
+      return NextResponse.json(
+        { error: 'Not a client account. Please use the worker app.' },
+        { status: 403 }
+      )
+    }
 
-    return NextResponse.json({
-      data: {
-        token: mockToken,
-        userId: mockClientId,
-        email,
-        message: 'Login successful (mock response for Sprint 1)'
-      }
-    })
-
-  } catch (error) {
-    console.error('Client login error:', error)
     return NextResponse.json(
-      {
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to login'
-        }
-      },
+      { error: message },
       { status: 500 }
     )
   }

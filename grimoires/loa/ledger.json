@@ -16,44 +16,44 @@
           "global_id": 1,
           "label": "Foundation & Setup",
           "description": "Establish development environment, database, auth, and basic Next.js application",
-          "status": "pending",
-          "started": null,
-          "completed": null
+          "status": "completed",
+          "started": "2026-01-27T23:52:00Z",
+          "completed": "2026-01-28T04:00:00Z"
         },
         {
           "local_id": "sprint-2",
           "global_id": 2,
           "label": "Core Worker Flow (Part 1)",
           "description": "Build worker onboarding flow with MiniPay integration and Self Protocol verification",
-          "status": "pending",
-          "started": null,
-          "completed": null
+          "status": "completed",
+          "started": "2026-01-28T04:00:00Z",
+          "completed": "2026-01-28T12:00:00Z"
         },
         {
           "local_id": "sprint-3",
           "global_id": 3,
           "label": "Core Worker Flow (Part 2)",
           "description": "Implement task types, task UI, timer, submission, and golden task QA",
-          "status": "pending",
-          "started": null,
-          "completed": null
+          "status": "completed",
+          "started": "2026-01-28T12:00:00Z",
+          "completed": "2026-01-28T18:00:00Z"
         },
         {
           "local_id": "sprint-4",
           "global_id": 4,
           "label": "Payment Infrastructure",
           "description": "Integrate Celo blockchain, implement payment flow, consensus, earnings, and withdrawal",
-          "status": "pending",
-          "started": null,
-          "completed": null
+          "status": "completed",
+          "started": "2026-01-28T18:00:00Z",
+          "completed": "2026-01-28T21:00:00Z"
         },
         {
           "local_id": "sprint-5",
           "global_id": 5,
           "label": "Client Dashboard",
           "description": "Build client dashboard for project creation, CSV upload, and results download",
-          "status": "pending",
-          "started": null,
+          "status": "in_progress",
+          "started": "2026-01-28T21:30:00Z",
           "completed": null
         },
         {
@@ -79,5 +79,5 @@
   ],
   "next_cycle_number": 2,
   "global_sprint_counter": 6,
-  "last_updated": "2026-01-28T19:17:59Z"
+  "last_updated": "2026-01-28T21:30:00Z"
 }
