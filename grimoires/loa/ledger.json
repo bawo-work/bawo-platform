@@ -52,18 +52,18 @@
           "global_id": 5,
           "label": "Client Dashboard",
           "description": "Build client dashboard for project creation, CSV upload, and results download",
-          "status": "in_progress",
+          "status": "completed",
           "started": "2026-01-28T21:30:00Z",
-          "completed": null
+          "completed": "2026-01-29T00:00:00Z"
         },
         {
           "local_id": "sprint-6",
           "global_id": 6,
           "label": "Gamification & Polish",
           "description": "Add gamification features (referrals, streaks, leaderboards, RLHF), offline support, and polish for launch",
-          "status": "pending",
-          "started": null,
-          "completed": null
+          "status": "completed",
+          "started": "2026-01-29T00:00:00Z",
+          "completed": "2026-01-29T03:00:00Z"
         }
       ],
       "next_sprint_number": 7,
@@ -79,5 +79,5 @@
   ],
   "next_cycle_number": 2,
   "global_sprint_counter": 6,
-  "last_updated": "2026-01-28T21:30:00Z"
+  "last_updated": "2026-01-29T03:00:00Z"
 }
