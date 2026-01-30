@@ -10,12 +10,18 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Bawo - Fair pay for AI data labeling",
-  description: "Earn money labeling AI data, get paid instantly via stablecoins. Mobile-first platform for African workers.",
+  title: "Bawo – Fair pay for AI data labeling",
+  description: "Label AI training data in your native language. Fair rates. Instant payment to your wallet. No delays, no minimums.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/bawo-logo.png",
+    apple: "/bawo-logo.png",
+    shortcut: "/bawo-logo.png",
+  },
+  openGraph: {
+    title: "Bawo – Fair pay for AI data labeling",
+    description: "Label AI training data in your native language. Fair rates. Instant payment to your wallet.",
+    images: ["/bawo-logo.png"],
   },
 }
 
