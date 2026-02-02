@@ -90,6 +90,10 @@ export function WalletDetector({
     );
   }
 
+  // Check if in dev mode with non-MiniPay wallet
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevMode = isDevelopment && !window.ethereum?.isMiniPay;
+
   // Error state (in MiniPay but connection failed)
   if (error && !isConnected) {
     return (
@@ -128,6 +132,11 @@ export function WalletDetector({
     return (
       <Card className="p-6 border-2 border-success bg-cream">
         <div className="text-center">
+          {isDevMode && (
+            <div className="mb-3 inline-block px-3 py-1 bg-amber-100 border border-amber-400 rounded-full text-xs font-medium text-amber-800">
+              DEV MODE: Using {window.ethereum?.isMetaMask ? 'MetaMask' : 'wallet'} for testing
+            </div>
+          )}
           <svg
             className="w-12 h-12 text-success mx-auto mb-3"
             fill="none"
@@ -148,7 +157,7 @@ export function WalletDetector({
             {formatWalletAddress(address)}
           </p>
           <p className="text-sm text-warm-gray-600">
-            MiniPay wallet detected and connected
+            {isDevMode ? 'Test wallet for development' : 'MiniPay wallet detected and connected'}
           </p>
         </div>
       </Card>
