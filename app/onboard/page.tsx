@@ -54,22 +54,40 @@ export default function OnboardPage() {
     async function checkExistingProfile() {
       if (!address || !isConnected) return;
 
+      console.log('[Onboard] Checking for existing profile...', address);
+
       try {
-        const result = await getWorkerByWallet(address);
+        // Add timeout to profile check
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Profile check timed out')), 5000);
+        });
+
+        const result = await Promise.race([
+          getWorkerByWallet(address),
+          timeoutPromise
+        ]) as any;
+
+        console.log('[Onboard] Profile check result:', result);
+
         if (result.success && result.data) {
           // Profile exists - redirect to dashboard
+          console.log('[Onboard] Profile found, redirecting to dashboard');
           router.push('/dashboard');
         } else {
           // No profile - continue onboarding
+          console.log('[Onboard] No profile found, continuing to welcome');
           setStep('welcome');
         }
       } catch (err) {
-        console.error('Error checking profile:', err);
+        console.error('[Onboard] Error checking profile:', err);
+        console.log('[Onboard] Error caught, continuing to welcome screen anyway');
+        // If profile check fails (e.g., Supabase not running), just continue
         setStep('welcome');
       }
     }
 
     if (isConnected && address && step === 'wallet' && !walletLoading) {
+      console.log('[Onboard] Wallet connected, checking profile...');
       checkExistingProfile();
     }
   }, [address, isConnected, walletLoading, step, router]);
