@@ -40,6 +40,7 @@ async function withTimeout<T>(
 export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
   // Server-side guard
   if (typeof window === 'undefined') {
+    console.log('[Wallet] Server-side - skipping detection');
     return {
       address: null,
       isMiniPay: false,
@@ -47,22 +48,31 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
     };
   }
 
+  console.log('[Wallet] Starting detection...');
+  console.log('[Wallet] window.ethereum exists:', !!window.ethereum);
+  console.log('[Wallet] window.ethereum:', window.ethereum);
+
   // Check for Ethereum provider
   if (!window.ethereum) {
+    console.log('[Wallet] No Ethereum provider detected');
     return {
       address: null,
       isMiniPay: false,
-      error: 'No Ethereum provider detected'
+      error: 'No Ethereum provider detected. Please install MetaMask.'
     };
   }
 
   // Check if it's MiniPay specifically
   const isMiniPay = window.ethereum.isMiniPay === true;
+  console.log('[Wallet] Is MiniPay:', isMiniPay);
+  console.log('[Wallet] Is MetaMask:', window.ethereum.isMetaMask);
 
   // DEV MODE: Allow any wallet (MetaMask, etc.) in development
   const isDevelopment = process.env.NODE_ENV === 'development';
+  console.log('[Wallet] Is development mode:', isDevelopment);
 
   if (!isMiniPay && !isDevelopment) {
+    console.log('[Wallet] Not MiniPay and not in dev mode');
     return {
       address: null,
       isMiniPay: false,
@@ -72,8 +82,10 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
 
   // In dev mode, treat any wallet as "MiniPay" for testing
   const treatAsMiniPay = isMiniPay || isDevelopment;
+  console.log('[Wallet] Treat as MiniPay:', treatAsMiniPay);
 
   try {
+    console.log('[Wallet] Checking for existing accounts...');
     // Request accounts with 10-second timeout - MiniPay auto-approves this without user prompt
     const accounts = await withTimeout(
       window.ethereum.request({
@@ -83,29 +95,37 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
       'Wallet request timed out'
     );
 
+    console.log('[Wallet] eth_accounts result:', accounts);
+
     if (Array.isArray(accounts) && accounts.length > 0) {
+      console.log('[Wallet] Found existing accounts:', accounts.length);
       return {
         address: accounts[0] as string,
         isMiniPay: treatAsMiniPay
       };
     }
 
+    console.log('[Wallet] No existing accounts, requesting access...');
     // If no accounts returned, try requesting permission with 30-second timeout
     const requestedAccounts = await withTimeout(
       window.ethereum.request({
         method: 'eth_requestAccounts'
       }) as Promise<unknown>,
       30000,
-      'Wallet connection request timed out. Please unlock your wallet and try again.'
+      'Connection request timed out. Please unlock your wallet and approve the connection.'
     );
 
+    console.log('[Wallet] eth_requestAccounts result:', requestedAccounts);
+
     if (Array.isArray(requestedAccounts) && requestedAccounts.length > 0) {
+      console.log('[Wallet] Successfully connected:', requestedAccounts[0]);
       return {
         address: requestedAccounts[0] as string,
         isMiniPay: treatAsMiniPay
       };
     }
 
+    console.log('[Wallet] No accounts available after request');
     return {
       address: null,
       isMiniPay: treatAsMiniPay,
@@ -113,7 +133,7 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
     };
 
   } catch (error) {
-    console.error('MiniPay detection failed:', error);
+    console.error('[Wallet] Detection failed:', error);
     return {
       address: null,
       isMiniPay: treatAsMiniPay,
