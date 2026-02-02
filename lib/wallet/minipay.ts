@@ -3,6 +3,32 @@
 import type { WalletDetectionResult } from './types';
 
 /**
+ * Helper function to add timeout to promises
+ */
+async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  errorMessage: string
+): Promise<T> {
+  let timeoutHandle: NodeJS.Timeout;
+
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeoutHandle = setTimeout(() => {
+      reject(new Error(errorMessage));
+    }, timeoutMs);
+  });
+
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    clearTimeout(timeoutHandle);
+    return result;
+  } catch (error) {
+    clearTimeout(timeoutHandle);
+    throw error;
+  }
+}
+
+/**
  * Detects MiniPay wallet and auto-captures wallet address
  *
  * MiniPay browser injects window.ethereum with isMiniPay flag.
@@ -48,10 +74,14 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
   const treatAsMiniPay = isMiniPay || isDevelopment;
 
   try {
-    // Request accounts - MiniPay auto-approves this without user prompt
-    const accounts = await window.ethereum.request({
-      method: 'eth_accounts'
-    });
+    // Request accounts with 10-second timeout - MiniPay auto-approves this without user prompt
+    const accounts = await withTimeout(
+      window.ethereum.request({
+        method: 'eth_accounts'
+      }) as Promise<unknown>,
+      10000,
+      'Wallet request timed out'
+    );
 
     if (Array.isArray(accounts) && accounts.length > 0) {
       return {
@@ -60,10 +90,14 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
       };
     }
 
-    // If no accounts returned, try requesting permission
-    const requestedAccounts = await window.ethereum.request({
-      method: 'eth_requestAccounts'
-    });
+    // If no accounts returned, try requesting permission with 30-second timeout
+    const requestedAccounts = await withTimeout(
+      window.ethereum.request({
+        method: 'eth_requestAccounts'
+      }) as Promise<unknown>,
+      30000,
+      'Wallet connection request timed out. Please unlock your wallet and try again.'
+    );
 
     if (Array.isArray(requestedAccounts) && requestedAccounts.length > 0) {
       return {
