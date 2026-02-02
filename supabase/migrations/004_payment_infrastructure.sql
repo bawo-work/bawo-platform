@@ -20,19 +20,9 @@ CREATE INDEX IF NOT EXISTS idx_transactions_task_id ON transactions(task_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_consensus ON tasks(consensus_reached, status);
 
 -- Add check constraint to ensure valid amounts
-ALTER TABLE transactions ADD CONSTRAINT check_positive_amount CHECK (amount_usd > 0 OR tx_type = 'withdrawal');
+ALTER TABLE transactions ADD CONSTRAINT IF NOT EXISTS check_positive_amount CHECK (amount_usd > 0 OR tx_type = 'withdrawal');
 
--- Add updated_at trigger for workers table
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_workers_updated_at BEFORE UPDATE ON workers
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- Note: update_updated_at_column function and triggers already created in 001_initial_schema.sql
 
 -- Add comment documentation
 COMMENT ON COLUMN workers.balance_usd IS 'Current cUSD balance available for withdrawal';
