@@ -33,13 +33,19 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
   // Check if it's MiniPay specifically
   const isMiniPay = window.ethereum.isMiniPay === true;
 
-  if (!isMiniPay) {
+  // DEV MODE: Allow any wallet (MetaMask, etc.) in development
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
+  if (!isMiniPay && !isDevelopment) {
     return {
       address: null,
       isMiniPay: false,
       error: 'Not MiniPay browser'
     };
   }
+
+  // In dev mode, treat any wallet as "MiniPay" for testing
+  const treatAsMiniPay = isMiniPay || isDevelopment;
 
   try {
     // Request accounts - MiniPay auto-approves this without user prompt
@@ -50,7 +56,7 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
     if (Array.isArray(accounts) && accounts.length > 0) {
       return {
         address: accounts[0] as string,
-        isMiniPay: true
+        isMiniPay: treatAsMiniPay
       };
     }
 
@@ -62,13 +68,13 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
     if (Array.isArray(requestedAccounts) && requestedAccounts.length > 0) {
       return {
         address: requestedAccounts[0] as string,
-        isMiniPay: true
+        isMiniPay: treatAsMiniPay
       };
     }
 
     return {
       address: null,
-      isMiniPay: true,
+      isMiniPay: treatAsMiniPay,
       error: 'No accounts available'
     };
 
@@ -76,7 +82,7 @@ export async function detectMiniPayWallet(): Promise<WalletDetectionResult> {
     console.error('MiniPay detection failed:', error);
     return {
       address: null,
-      isMiniPay: true,
+      isMiniPay: treatAsMiniPay,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
@@ -103,9 +109,14 @@ export function isValidEthereumAddress(address: string): boolean {
 
 /**
  * Checks if user is in MiniPay browser (synchronous check)
- * @returns boolean - true if MiniPay detected
+ * @returns boolean - true if MiniPay detected (or dev mode)
  */
 export function isMiniPayBrowser(): boolean {
   if (typeof window === 'undefined') return false;
+
+  // DEV MODE: Treat any wallet as MiniPay in development
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  if (isDevelopment && window.ethereum) return true;
+
   return window.ethereum?.isMiniPay === true;
 }
