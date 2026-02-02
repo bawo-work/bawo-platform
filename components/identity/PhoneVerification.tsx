@@ -59,25 +59,33 @@ export function PhoneVerification({
    * Send SMS code
    */
   const handleSendCode = async () => {
+    console.log('[PhoneVerification] handleSendCode called');
+    console.log('[PhoneVerification] Phone number:', phoneNumber);
     setError(null);
 
     if (!isValidPhoneNumber(phoneNumber)) {
+      console.log('[PhoneVerification] Invalid phone number');
       setError('Please enter a valid phone number with country code (e.g., +254712345678)');
       return;
     }
 
+    console.log('[PhoneVerification] Phone number valid, sending code...');
     setIsLoading(true);
 
     try {
       const result = await sendVerificationCode(phoneNumber);
+      console.log('[PhoneVerification] sendVerificationCode result:', result);
 
       if (result.sent) {
+        console.log('[PhoneVerification] Code sent successfully, moving to code step');
         setStep('code');
         setResendCooldown(PHONE_VERIFICATION_CONFIG.resendCooldownSeconds);
       } else {
+        console.log('[PhoneVerification] Failed to send code:', result.error);
         setError(result.error || 'Failed to send code');
       }
     } catch (err) {
+      console.log('[PhoneVerification] Error sending code:', err);
       setError(err instanceof Error ? err.message : 'Failed to send code');
     } finally {
       setIsLoading(false);
