@@ -299,26 +299,62 @@ export function PhoneVerification({
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-error/10 border border-error rounded-lg">
-          <p className="text-sm text-error">{error}</p>
+        <div className="mb-4 p-4 bg-error/10 border-2 border-error rounded-lg">
+          <div className="flex gap-2 items-start">
+            <svg className="w-5 h-5 text-error mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-error">{error}</p>
+            </div>
+          </div>
         </div>
       )}
 
       <div className="space-y-4">
         <div>
           <Label htmlFor="phone">Phone Number</Label>
-          <Input
-            id="phone"
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="+254712345678"
-            className="min-h-[48px]"
-            disabled={isLoading}
-          />
-          <p className="text-xs text-warm-gray-600 mt-1">
-            Include country code (e.g., +254 for Kenya)
-          </p>
+          <div className="relative">
+            <Input
+              id="phone"
+              type="tel"
+              value={phoneNumber}
+              onChange={(e) => {
+                let value = e.target.value.trim();
+                // Auto-add + if user starts typing without it
+                if (value && !value.startsWith('+')) {
+                  value = '+' + value;
+                }
+                setPhoneNumber(value);
+                // Clear error when user types
+                if (error) setError(null);
+              }}
+              placeholder="+254712345678"
+              className={`min-h-[48px] ${
+                phoneNumber && !isValidPhoneNumber(phoneNumber)
+                  ? 'border-warning focus:border-warning focus:ring-warning'
+                  : ''
+              }`}
+              disabled={isLoading}
+            />
+            {phoneNumber && isValidPhoneNumber(phoneNumber) && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 space-y-1">
+            <p className="text-xs text-warm-gray-600">
+              Include country code. Examples:
+            </p>
+            <ul className="text-xs text-warm-gray-600 ml-4">
+              <li>• Kenya: <span className="font-mono">+254712345678</span></li>
+              <li>• Nigeria: <span className="font-mono">+2348012345678</span></li>
+              <li>• South Africa: <span className="font-mono">+27812345678</span></li>
+            </ul>
+          </div>
         </div>
 
         <Button
