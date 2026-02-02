@@ -13,30 +13,32 @@
     "lighthouse": "npx lighthouse https://bawo-preview.vercel.app --throttling-method=simulate --throttling.cpuSlowdownMultiplier=4 --throttling.rttMs=150 --throttling.throughputKbps=1638 --output=html --output-path=./lighthouse-report.html"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@supabase/supabase-js": "^2.38.4",
+    "class-variance-authority": "^0.7.1",
+    "idb": "^8.0.0",
     "next": "14.0.3",
+    "next-pwa": "^5.6.0",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "viem": "^2.0.0",
-    "zustand": "^4.4.7",
-    "swr": "^2.2.4",
-    "papaparse": "^5.4.1",
     "react-dropzone": "^14.2.3",
-    "next-pwa": "^5.6.0",
-    "idb": "^8.0.0"
+    "swr": "^2.2.4",
+    "viem": "^2.0.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.0.3",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
     "@types/node": "^20",
+    "@types/papaparse": "^5.3.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/papaparse": "^5.3.14",
-    "@next/bundle-analyzer": "^14.0.3",
-    "typescript": "^5",
-    "tailwindcss": "^3.3.0",
-    "postcss": "^8",
     "autoprefixer": "^10.0.1",
     "jest": "^29.7.0",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/jest-dom": "^6.1.5"
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
   }
 }
