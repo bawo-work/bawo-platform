@@ -20,7 +20,14 @@ CREATE INDEX IF NOT EXISTS idx_transactions_task_id ON transactions(task_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_consensus ON tasks(consensus_reached, status);
 
 -- Add check constraint to ensure valid amounts
-ALTER TABLE transactions ADD CONSTRAINT IF NOT EXISTS check_positive_amount CHECK (amount_usd > 0 OR tx_type = 'withdrawal');
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'check_positive_amount'
+    ) THEN
+        ALTER TABLE transactions ADD CONSTRAINT check_positive_amount CHECK (amount_usd > 0 OR tx_type = 'withdrawal');
+    END IF;
+END $$;
 
 -- Note: update_updated_at_column function and triggers already created in 001_initial_schema.sql
 
