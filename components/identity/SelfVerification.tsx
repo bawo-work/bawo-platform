@@ -91,10 +91,10 @@ export function SelfVerification({
   // Error state
   if (error) {
     return (
-      <Card className="p-6 border-2 border-error bg-cream">
+      <Card className="p-6 border-2 border-red-500 bg-red-50">
         <div className="text-center">
           <svg
-            className="w-12 h-12 text-error mx-auto mb-3"
+            className="w-12 h-12 text-red-500 mx-auto mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -106,10 +106,10 @@ export function SelfVerification({
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-          <h3 className="text-lg font-semibold text-warm-gray-800 mb-2">
+          <h3 className="text-lg font-semibold text-red-700 mb-2">
             Could not verify
           </h3>
-          <p className="text-warm-gray-600 mb-4">{error}</p>
+          <p className="text-red-600 font-medium mb-4">{error}</p>
           <div className="flex gap-3 justify-center">
             <Button
               onClick={handleStartVerification}
