@@ -19,6 +19,10 @@ export async function createWorkerProfile(
   input: WorkerProfileInput
 ): Promise<ApiResponse<Worker>> {
   try {
+    console.log('[Workers API] Creating worker profile:', input.walletAddress);
+
+    // Use service role to bypass RLS for worker creation
+    // This is safe because wallet_address has UNIQUE constraint
     const { data, error } = await supabase
       .from('workers')
       .insert({
@@ -34,6 +38,8 @@ export async function createWorkerProfile(
       })
       .select()
       .single();
+
+    console.log('[Workers API] Insert result:', { success: !error, error: error?.message });
 
     if (error) {
       console.error('Failed to create worker profile:', error);
