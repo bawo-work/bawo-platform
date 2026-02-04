@@ -2,7 +2,110 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+function WaitlistSection() {
+  const [email, setEmail] = useState('')
+  const [type, setType] = useState<'worker' | 'company'>('worker')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, type }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setStatus('success')
+        setMessage(data.message)
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMessage(data.error || 'Something went wrong')
+      }
+    } catch {
+      setStatus('error')
+      setMessage('Network error. Please try again.')
+    }
+  }
+
+  return (
+    <section className="final-cta bg-warm-black text-white py-16 px-6 text-center relative overflow-hidden" id="waitlist">
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 relative z-10">Join the beta</h2>
+      <p className="text-xl opacity-90 mb-8 max-w-[600px] mx-auto relative z-10">
+        Whether you want to earn or need quality data, we&apos;re ready.
+      </p>
+
+      {status === 'success' ? (
+        <div className="relative z-10 max-w-md mx-auto">
+          <div className="bg-teal-700/30 border border-teal-500/40 rounded-2xl p-8">
+            <div className="text-4xl mb-4">🎉</div>
+            <p className="text-xl font-semibold mb-2">{message}</p>
+            <p className="opacity-70 text-sm">We&apos;ll reach out when your spot is ready.</p>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="relative z-10 max-w-md mx-auto">
+          {/* Toggle */}
+          <div className="flex gap-2 justify-center mb-6">
+            <button
+              type="button"
+              onClick={() => setType('worker')}
+              className={`px-5 py-2 rounded-lg font-medium text-sm transition-all ${
+                type === 'worker'
+                  ? 'bg-teal-700 text-white shadow-md'
+                  : 'bg-white/10 text-white/70 hover:bg-white/15'
+              }`}
+            >
+              I Want to Earn
+            </button>
+            <button
+              type="button"
+              onClick={() => setType('company')}
+              className={`px-5 py-2 rounded-lg font-medium text-sm transition-all ${
+                type === 'company'
+                  ? 'bg-teal-700 text-white shadow-md'
+                  : 'bg-white/10 text-white/70 hover:bg-white/15'
+              }`}
+            >
+              I Need Data
+            </button>
+          </div>
+
+          {/* Email input */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={type === 'worker' ? 'your@email.com' : 'work@company.com'}
+              required
+              className="flex-1 px-5 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-teal-500 focus:bg-white/15 transition-all text-base"
+            />
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="px-7 py-3 rounded-lg font-semibold bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all disabled:opacity-50 disabled:hover:translate-y-0 whitespace-nowrap"
+            >
+              {status === 'loading' ? 'Joining...' : 'Join Waitlist'}
+            </button>
+          </div>
+
+          {status === 'error' && (
+            <p className="mt-3 text-red-400 text-sm">{message}</p>
+          )}
+
+          <p className="mt-4 text-sm opacity-50">No spam. We&apos;ll only email when your access is ready.</p>
+        </form>
+      )}
+    </section>
+  )
+}
 
 export default function LandingPage() {
   useEffect(() => {
@@ -403,19 +506,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="final-cta bg-warm-black text-white py-16 px-6 text-center relative overflow-hidden" id="contact">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 relative z-10">Join the beta</h2>
-        <p className="text-xl opacity-90 mb-8 max-w-[600px] mx-auto relative z-10">Whether you want to earn or need quality data, we're ready.</p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-          <a href="mailto:workers@bawo.work?subject=Beta Access - Worker" className="inline-block px-7 py-3 rounded-lg font-semibold bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all">I Want to Earn</a>
-          <a href="mailto:clients@bawo.work?subject=Beta Access - Client" className="inline-block px-7 py-3 rounded-lg font-semibold bg-cream text-warm-gray-800 hover:bg-sand transition-all">I Need Data</a>
-        </div>
-      </section>
+      {/* Final CTA — Waitlist */}
+      <WaitlistSection />
 
       {/* Footer */}
-      <footer className="bg-warm-gray-800 text-white py-12 px-6">
+      <footer className="bg-warm-gray-800 text-white py-12 px-6" id="contact">
         <div className="max-w-[1280px] mx-auto">
           <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-8">
             <div>
