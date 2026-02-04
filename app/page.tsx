@@ -14,19 +14,22 @@ function WaitlistSection() {
     e.preventDefault()
     setStatus('loading')
     try {
-      const res = await fetch('/api/waitlist', {
+      const res = await fetch('https://formsubmit.co/ajax/hello@bawo.work', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, type }),
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          email,
+          type,
+          _subject: `Bawo Waitlist: ${type} signup — ${email}`,
+        }),
       })
-      const data = await res.json()
       if (res.ok) {
         setStatus('success')
-        setMessage(data.message)
+        setMessage("You're in! We'll be in touch soon.")
         setEmail('')
       } else {
         setStatus('error')
-        setMessage(data.error || 'Something went wrong')
+        setMessage('Something went wrong. Please try again.')
       }
     } catch {
       setStatus('error')
