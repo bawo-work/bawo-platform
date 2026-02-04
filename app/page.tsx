@@ -14,7 +14,7 @@ function WaitlistSection() {
     e.preventDefault()
     setStatus('loading')
     try {
-      const res = await fetch('https://formsubmit.co/ajax/hello@bawo.work', {
+      const res = await fetch('https://formsubmit.co/ajax/hello.bawo.work@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
