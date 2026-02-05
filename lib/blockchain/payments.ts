@@ -186,6 +186,34 @@ export async function getWorkerBalance(workerId: string): Promise<number> {
 }
 
 /**
+ * Send a payment with fee abstraction
+ * Used by points/streaks/referrals systems
+ * 
+ * @param walletAddress Destination wallet address
+ * @param amountUSD Amount to send in USD
+ * @returns Transaction hash
+ */
+export async function sendPaymentWithFeeAbstraction(
+  walletAddress: string,
+  amountUSD: number
+): Promise<string> {
+  try {
+    const { txHash } = await transferCUSDWithFeeAbstraction(walletAddress, amountUSD)
+    
+    // Wait for confirmation
+    await publicClient.waitForTransactionReceipt({
+      hash: txHash as `0x${string}`,
+      confirmations: 1,
+    })
+    
+    return txHash
+  } catch (error: any) {
+    console.error('Fee abstraction payment failed:', error)
+    throw new Error(`Payment failed: ${error.message}`)
+  }
+}
+
+/**
  * Estimate gas fee for a payment
  * @param amountUSD Amount to transfer
  * @returns Estimated fee in USD

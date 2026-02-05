@@ -31,9 +31,10 @@ export async function GET(request: Request) {
 
   // Group by worker and sum earnings
   const earningsMap = new Map<string, { wallet: string; total: number }>();
-  earnings?.forEach((t) => {
+  earnings?.forEach((t: any) => {
+    const workerData = t.workers as { wallet_address?: string } | null;
     const existing = earningsMap.get(t.worker_id) || {
-      wallet: t.workers?.wallet_address || '',
+      wallet: workerData?.wallet_address || '',
       total: 0,
     };
     earningsMap.set(t.worker_id, {
