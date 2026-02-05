@@ -71,7 +71,7 @@ export async function exportProjectResults(projectId: string): Promise<string> {
       text: task.content,
       label: task.consensus_label || '',
       confidence: task.consensus_confidence || 0,
-      consensus: consensus ? 'yes' : 'no',
+      consensus: consensus,
       worker_count: workerCount,
       completed_at: task.completed_at || '',
     }

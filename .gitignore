@@ -38,3 +38,5 @@ next-env.d.ts
 
 # supabase
 .supabase/
+public/sw.js
+public/workbox-*.js

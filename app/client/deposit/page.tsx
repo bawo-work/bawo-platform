@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Wallet, QrCode, CreditCard } from 'lucide-react'
 import { getCurrentClient } from '@/lib/auth/client'
-import QRCodeReact from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 
 const DEPOSIT_ADDRESS = process.env.NEXT_PUBLIC_CLIENT_DEPOSIT_ADDRESS || '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb'
 
@@ -73,7 +73,7 @@ export default function DepositPage() {
 
             {/* QR Code */}
             <div className="flex justify-center p-4 bg-gray-50 rounded-lg">
-              <QRCodeReact value={DEPOSIT_ADDRESS} size={200} />
+              <QRCodeSVG value={DEPOSIT_ADDRESS} size={200} />
             </div>
 
             {/* Address */}
