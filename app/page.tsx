@@ -9,6 +9,18 @@ function WaitlistSection() {
   const [type, setType] = useState<'worker' | 'company'>('worker')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [refSource, setRefSource] = useState('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const ref = params.get('ref') || params.get('utm_source') || ''
+      const utm_medium = params.get('utm_medium') || ''
+      const utm_campaign = params.get('utm_campaign') || ''
+      const parts = [ref, utm_medium, utm_campaign].filter(Boolean)
+      setRefSource(parts.join(' / ') || 'direct')
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,7 +32,8 @@ function WaitlistSection() {
         body: JSON.stringify({
           email,
           type,
-          _subject: `Bawo Waitlist: ${type} signup — ${email}`,
+          source: refSource,
+          _subject: `Bawo Waitlist: ${type} signup — ${email} [via ${refSource}]`,
         }),
       })
       if (res.ok) {
@@ -79,6 +92,9 @@ function WaitlistSection() {
               I Need Data
             </button>
           </div>
+
+          {/* Hidden ref tracking field */}
+          <input type="hidden" name="source" value={refSource} />
 
           {/* Email input */}
           <div className="flex flex-col sm:flex-row gap-3">
