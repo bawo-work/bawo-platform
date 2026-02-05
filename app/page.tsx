@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function WaitlistSection() {
   const [email, setEmail] = useState('')
@@ -126,14 +126,77 @@ function WaitlistSection() {
   )
 }
 
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  const faqs = [
+    {
+      q: 'How do I get paid?',
+      a: 'You get paid in stablecoins (cUSD) directly to your MiniPay wallet within 5 seconds of completing a task. No minimum balance required — you can cash out to local currency (M-Pesa, bank transfer) anytime through MiniPay.',
+    },
+    {
+      q: 'What tasks will I do?',
+      a: 'Tasks include translating text, labeling images, rating AI responses, transcribing audio, and validating data — all in your native language. Most tasks take 30 seconds to 5 minutes and can be done on your phone.',
+    },
+    {
+      q: 'Do I need experience?',
+      a: 'No prior experience needed. If you speak an African language fluently, you qualify. We provide simple instructions for each task. Your language skills are the expertise AI companies are paying for.',
+    },
+    {
+      q: 'Is this a scam?',
+      a: 'No. Bawo is built on Celo blockchain — every payment is publicly verifiable on-chain. We never ask for money upfront. You work, you get paid. Identity is verified through Self Protocol (zero-knowledge — we never see your documents).',
+    },
+    {
+      q: 'What languages do you support?',
+      a: 'We\'re starting with Swahili, Yoruba, Hausa, Amharic, Zulu, and Igbo — then expanding to 20+ African languages. The less-resourced the language, the higher the pay per task.',
+    },
+  ]
+
+  return (
+    <section className="py-16 px-6 bg-cream" id="faq">
+      <div className="max-w-[800px] mx-auto">
+        <div className="text-center mb-12 fade-in-section section-header">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-warm-black mb-4">Common questions</h2>
+          <p className="text-lg text-warm-gray-600">Straight answers. No fine print.</p>
+        </div>
+
+        <div className="space-y-3">
+          {faqs.map((faq, i) => (
+            <div
+              key={i}
+              className="fade-in-section bg-white rounded-2xl border border-sand overflow-hidden transition-all duration-300 hover:border-teal-500/30"
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
+              >
+                <span className="text-lg font-semibold text-warm-black">{faq.q}</span>
+                <span className={`text-teal-700 text-2xl font-light flex-shrink-0 transition-transform duration-300 ${openIndex === i ? 'rotate-45' : ''}`}>+</span>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  openIndex === i ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <p className="px-6 pb-5 text-warm-gray-600 leading-relaxed">{faq.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function LandingPage() {
   useEffect(() => {
     // Smooth scrolling for anchor links
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+      const anchor = target.closest('a')
+      if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
         e.preventDefault()
-        const id = target.getAttribute('href')?.slice(1)
+        const id = anchor.getAttribute('href')?.slice(1)
         if (id) {
           const element = document.getElementById(id)
           element?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -353,7 +416,8 @@ export default function LandingPage() {
             <a href="#workers" className="text-warm-gray-800 font-medium text-sm hover:text-teal-700 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-teal-700 after:transition-all hover:after:w-full">Workers</a>
             <a href="#companies" className="text-warm-gray-800 font-medium text-sm hover:text-teal-700 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-teal-700 after:transition-all hover:after:w-full">Companies</a>
             <a href="#how" className="text-warm-gray-800 font-medium text-sm hover:text-teal-700 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-teal-700 after:transition-all hover:after:w-full">How It Works</a>
-            <a href="#contact" className="inline-block px-7 py-3 rounded-lg font-semibold text-sm bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all">Get Started</a>
+            <a href="#faq" className="text-warm-gray-800 font-medium text-sm hover:text-teal-700 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-teal-700 after:transition-all hover:after:w-full">FAQ</a>
+            <a href="#waitlist" className="inline-block px-7 py-3 rounded-lg font-semibold text-sm bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all">Join Waitlist</a>
           </div>
         </div>
       </nav>
@@ -417,6 +481,34 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Social Proof / Trust Bar */}
+      <section className="py-10 px-6 border-y border-sand bg-cream/50">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center text-center">
+            <div className="fade-in-section">
+              <div className="text-3xl md:text-4xl font-extrabold text-teal-700 tabular-nums">115M+</div>
+              <div className="text-sm text-warm-gray-600 mt-1">Swahili speakers</div>
+            </div>
+            <div className="fade-in-section">
+              <div className="text-3xl md:text-4xl font-extrabold text-teal-700 tabular-nums">11M</div>
+              <div className="text-sm text-warm-gray-600 mt-1">MiniPay wallets</div>
+            </div>
+            <div className="fade-in-section">
+              <div className="text-3xl md:text-4xl font-extrabold text-teal-700 tabular-nums">$37B</div>
+              <div className="text-sm text-warm-gray-600 mt-1">AI training market</div>
+            </div>
+            <div className="fade-in-section">
+              <div className="text-lg font-bold text-warm-black">Built on</div>
+              <div className="text-sm text-teal-700 font-semibold mt-1">Celo Blockchain</div>
+            </div>
+            <div className="fade-in-section">
+              <div className="text-lg font-bold text-warm-black">Powered by</div>
+              <div className="text-sm text-teal-700 font-semibold mt-1">Self Protocol</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Two Audiences */}
       <section className="bg-gradient-to-b from-cream to-white py-16 px-6 relative">
         <div className="max-w-[1280px] mx-auto relative z-10">
@@ -447,7 +539,7 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <a href="#contact" className="block w-full text-center px-7 py-3 rounded-lg font-semibold bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all">Join Beta</a>
+              <a href="#waitlist" className="block w-full text-center px-7 py-3 rounded-lg font-semibold bg-teal-700 text-white shadow-md hover:bg-teal-600 hover:-translate-y-0.5 hover:shadow-lg transition-all">Join Beta</a>
             </div>
 
             {/* Companies */}
@@ -471,7 +563,7 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <a href="#contact" className="block w-full text-center px-7 py-3 rounded-lg font-semibold bg-cream text-warm-gray-800 border border-sand hover:bg-sand transition-all">Schedule Demo</a>
+              <a href="#waitlist" className="block w-full text-center px-7 py-3 rounded-lg font-semibold bg-cream text-warm-gray-800 border border-sand hover:bg-sand transition-all">Schedule Demo</a>
             </div>
           </div>
         </div>
@@ -525,21 +617,44 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <FAQSection />
+
       {/* Final CTA — Waitlist */}
       <WaitlistSection />
 
       {/* Footer */}
       <footer className="bg-warm-gray-800 text-white py-12 px-6" id="contact">
         <div className="max-w-[1280px] mx-auto">
-          <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-8">
+          <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <Image src="/bawo-logo.png" alt="Bawo" width={36} height={36} className="brightness-0 invert opacity-80" />
                 <span className="text-2xl font-bold text-teal-100">bawo</span>
               </div>
-              <p className="opacity-80 leading-relaxed text-sm">
+              <p className="opacity-80 leading-relaxed text-sm mb-6">
                 Fair pay for AI data labeling. Instant stablecoin payments to African workers.
               </p>
+              <div className="flex gap-4">
+                <a
+                  href="https://t.me/bawo_work"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-sm font-medium"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                  Telegram
+                </a>
+                <a
+                  href="https://x.com/BawoWork"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-sm font-medium"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  @BawoWork
+                </a>
+              </div>
             </div>
 
             <div>
@@ -548,30 +663,23 @@ export default function LandingPage() {
                 <li><a href="#workers" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">For Workers</a></li>
                 <li><a href="#companies" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">For Companies</a></li>
                 <li><a href="#how" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">How It Works</a></li>
+                <li><a href="#faq" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">FAQ</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4 text-sm">Company</h4>
+              <h4 className="font-semibold mb-4 text-sm">Contact</h4>
               <ul className="list-none space-y-3">
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">About</a></li>
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Blog</a></li>
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Contact</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4 text-sm">Legal</h4>
-              <ul className="list-none space-y-3">
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Terms</a></li>
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Privacy</a></li>
-                <li><a href="#" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Worker Agreement</a></li>
+                <li><a href="mailto:hello@bawo.work" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">hello@bawo.work</a></li>
+                <li><a href="https://t.me/bawo_work" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">Telegram Community</a></li>
+                <li><a href="https://x.com/BawoWork" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:pl-1 transition-all text-sm">@BawoWork on X</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-white/10 text-center opacity-60 text-sm">
-            © 2026 Bawo. Built on Celo.
+          <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 opacity-60 text-sm">
+            <span>© 2026 Bawo. Built on Celo.</span>
+            <span>Nairobi 🇰🇪 · Lagos 🇳🇬 · Accra 🇬🇭</span>
           </div>
         </div>
       </footer>
